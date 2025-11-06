@@ -1,0 +1,697 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+:root {
+    --bg: #000;
+    --card-w: 300px;
+    --card-h: 450px;
+    /* *** MUST MATCH 'interval' in dcc.Interval *** */
+    --transition-speed: 0.6s;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: #e9eef2;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+.section-title {
+    margin: 20px 60px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.viewport {
+    position: relative;
+    width: 100%;
+    height: 550px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.row {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    height: 100%;
+}
+
+/* -- CARD STYLING (Same as before) -- */
+.card {
+    position: absolute;
+    top: 50%;
+    width: var(--card-w);
+    height: var(--card-h);
+    border-radius: 22px;
+    background: #111;
+    overflow: hidden;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+
+    /* HERE IS THE MAGIC: Animate all property changes */
+    transition: all var(--transition-speed) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+}
+
+.grad {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 0%, #000 90%);
+}
+
+.content {
+    position: absolute;
+    bottom: 25px;
+    left: 20px;
+    right: 20px;
+    z-index: 2;
+}
+
+.name {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.sub {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #ccc;
+    margin-bottom: 5px;
+}
+
+.bar-bg {
+    background: rgba(255, 255, 255, 0.2);
+    height: 4px;
+    border-radius: 4px;
+}
+
+.bar-fg {
+    background: #1db954;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.explicit {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    z-index: 9;
+}
+
+/* -- NAVIGATION BUTTONS (Same as before) -- */
+.chev {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    font-size: 32px;
+    height: 100%;
+    width: 80px;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.viewport:hover .chev {
+    opacity: 1;
+}
+
+.chev:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.left {
+    left: 0;
+}
+
+.right {
+    right: 0;
+}
+
+/* --- POSITION LOGIC --- */
+
+/* Helper function to apply styles */
+@mixin card-styles($left, $scale, $opacity, $z-index) {
+    left: $left;
+    transform: translateY(-50%) translateX(-50%) scale($scale);
+    opacity: $opacity;
+    z-index: $z-index;
+}
+
+/* This requires a SASS preprocessor. Let's do it in plain CSS. */
+
+/* --- POSITION LOGIC (Plain CSS) --- */
+
+/* Define the 7 stable positions */
+.card-pos--1 {
+    /* Off-screen LEFT */
+    left: -20%;
+    transform: translateY(-50%) translateX(-50%) scale(0.6);
+    opacity: 0;
+    z-index: 0;
+}
+
+.card-pos-0 {
+    /* Far Left */
+    left: 10%;
+    transform: translateY(-50%) translateX(-50%) scale(0.75);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.card-pos-1 {
+    /* Mid Left */
+    left: 30%;
+    transform: translateY(-50%) translateX(-50%) scale(0.9);
+    opacity: 0.8;
+    z-index: 2;
+}
+
+.card-pos-2 {
+    /* CENTER */
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%) scale(1.1);
+    opacity: 1;
+    z-index: 3;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+}
+
+.card-pos-3 {
+    /* Mid Right */
+    left: 70%;
+    transform: translateY(-50%) translateX(-50%) scale(0.9);
+    opacity: 0.8;
+    z-index: 2;
+}
+
+.card-pos-4 {
+    /* Far Right */
+    left: 90%;
+    transform: translateY(-50%) translateX(-50%) scale(0.75);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.card-pos-5 {
+    /* Off-screen RIGHT */
+    left: 120%;
+    transform: translateY(-50%) translateX(-50%) scale(0.6);
+    opacity: 0;
+    z-index: 0;
+}
+
+
+/* --- ANIMATION OVERRIDES --- */
+
+/* When moving LEFT (Right arrow clicked) */
+.row.is-moving-left .card-pos--1 {
+    /* Becomes new off-screen left */
+    left: -20%;
+    transform: translateY(-50%) translateX(-50%) scale(0.6);
+    opacity: 0;
+    z-index: 0;
+}
+
+.row.is-moving-left .card-pos-0 {
+    /* Moves from Far Left -> Off-screen Left */
+    left: -20%;
+    transform: translateY(-50%) translateX(-50%) scale(0.6);
+    opacity: 0;
+    z-index: 0;
+}
+
+.row.is-moving-left .card-pos-1 {
+    /* Moves from Mid Left -> Far Left */
+    left: 10%;
+    transform: translateY(-50%) translateX(-50%) scale(0.75);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.row.is-moving-left .card-pos-2 {
+    /* Moves from Center -> Mid Left */
+    left: 30%;
+    transform: translateY(-50%) translateX(-50%) scale(0.9);
+    opacity: 0.8;
+    z-index: 2;
+}
+
+.row.is-moving-left .card-pos-3 {
+    /* Moves from Mid Right -> Center */
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%) scale(1.1);
+    opacity: 1;
+    z-index: 3;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+}
+
+.row.is-moving-left .card-pos-4 {
+    /* Moves from Far Right -> Mid Right */
+    left: 70%;
+    transform: translateY(-50%) translateX(-50%) scale(0.9);
+    opacity: 0.8;
+    z-index: 2;
+}
+
+.row.is-moving-left .card-pos-5 {
+    /* Moves from Off-screen Right -> Far Right */
+    left: 90%;
+    transform: translateY(-50%) translateX(-50%) scale(0.75);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+/* When moving RIGHT (Left arrow clicked) */
+.row.is-moving-right .card-pos--1 {
+    /* Moves from Off-screen Left -> Far Left */
+    left: 10%;
+    transform: translateY(-50%) translateX(-50%) scale(0.75);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.row.is-moving-right .card-pos-0 {
+    /* Moves from Far Left -> Mid Left */
+    left: 30%;
+    transform: translateY(-50%) translateX(-50%) scale(0.9);
+    opacity: 0.8;
+    z-index: 2;
+}
+
+.row.is-moving-right .card-pos-1 {
+    /* Moves from Mid Left -> Center */
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%) scale(1.1);
+    opacity: 1;
+    z-index: 3;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+}
+
+.row.is-moving-right .card-pos-2 {
+    /* Moves from Center -> Mid Right */
+    left: 70%;
+    transform: translateY(-50%) translateX(-50%) scale(0.9);
+    opacity: 0.8;
+    z-index: 2;
+}
+
+.row.is-moving-right .card-pos-3 {
+    /* Moves from Mid Right -> Far Right */
+    left: 90%;
+    transform: translateY(-50%) translateX(-50%) scale(0.75);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.row.is-moving-right .card-pos-4 {
+    /* Moves from Far Right -> Off-screen Right */
+    left: 120%;
+    transform: translateY(-50%) translateX(-50%) scale(0.6);
+    opacity: 0;
+    z-index: 0;
+}
+
+.row.is-moving-right .card-pos-5 {
+    /* Becomes new off-screen right */
+    left: 120%;
+    transform: translateY(-50%) translateX(-50%) scale(0.6);
+    opacity: 0;
+    z-index: 0;
+}
+
+.bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.meta {
+    font-size: 13px;
+    /* Changed from 14px */
+    color: #aab3b9;
+}
+
+.meta b {
+    color: #fff;
+    /* Bright white for the genre name */
+    font-weight: 600;
+}
+
+.pill {
+    all: unset;
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px 18px;
+    /* Slightly more padding */
+    border-radius: 999px;
+    border: 1px solid #666;
+    /* Grey border */
+    background: #000;
+    /* Black background */
+    color: #fff;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all .2s ease;
+}
+
+.pill:hover {
+    background: #222;
+    /* Dark grey background on hover */
+    border-color: #888;
+    /* Lighter grey border on hover */
+}
+
+/* --- ADD THESE STYLES FOR THE SONG PANEL --- */
+
+/* Panel Layout */
+.song-panel-title {
+    font-size: 32px;
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+.song-grid {
+    display: grid;
+    /* This creates responsive columns */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    padding-bottom: 60px;
+    /* Space at the bottom */
+}
+
+/* Song Card Base */
+.song-card {
+    background: #181818;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: background .2s ease;
+}
+
+.song-card:hover {
+    background: #282828;
+}
+
+.song-card-content {
+    padding: 20px;
+}
+
+/* Image & Tags */
+.song-card-image {
+    position: relative;
+}
+
+.song-card-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 1 / 1;
+    /* Force 1:1 square */
+    object-fit: cover;
+}
+
+.song-card-grad {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+.tag {
+    position: absolute;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.tag-genre {
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tag-mood {
+    top: 12px;
+    right: 12px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Mood Gradients */
+.mood-energetic {
+    background: linear-gradient(135deg, #FF416C, #FF4B2B);
+}
+
+.mood-intense {
+    background: linear-gradient(135deg, #c04848, #8a2376);
+}
+
+.mood-happy {
+    background: linear-gradient(135deg, #ffd200, #f7971e);
+}
+
+.mood-melancholic {
+    background: linear-gradient(135deg, #243b55, #141e30);
+}
+
+.mood-balanced {
+    background: linear-gradient(135deg, #1D976C, #62D2A2);
+}
+
+
+/* Card Text Content */
+.song-name {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.song-artist {
+    font-size: 15px;
+    color: #b3b3b3;
+    margin-top: 4px;
+    margin-bottom: 16px;
+}
+
+/* Info Row (Time, BPM, Play) */
+.song-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    color: #b3b3b3;
+}
+
+.song-info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.song-info-item svg {
+    stroke: #b3b3b3;
+    fill: none;
+}
+
+.play-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: #fff;
+    color: #000;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform .2s ease, background .2s ease;
+}
+
+.play-button svg {
+    fill: #000;
+    stroke: #000;
+}
+
+.play-button:hover {
+    transform: scale(1.05);
+    background: #f0f0f0;
+}
+
+/* Popularity Bar */
+.pop-title {
+    font-size: 12px;
+    color: #b3b3b3;
+    margin: 0;
+    font-weight: 600;
+}
+
+.line {
+    margin-top: 4px;
+    /* Align with bar */
+}
+
+/* Audio Features */
+.audio-features-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+.feature-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    gap: 10px;
+}
+
+.feature-name {
+    color: #b3b3b3;
+    font-size: 14px;
+    flex-basis: 100px;
+    /* Give names a consistent width */
+    flex-shrink: 0;
+}
+
+.feature-value {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    flex-basis: 25px;
+    /* Give values a consistent width */
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.feature-bar-bg {
+    flex-grow: 1;
+    height: 8px;
+    background: #333;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.feature-bar-fg {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+/* Feature Bar Gradients */
+.feature-energy {
+    background: linear-gradient(90deg, #f857a6, #ff5858);
+}
+
+.feature-dance {
+    background: linear-gradient(90deg, #4776e6, #8e54e9);
+}
+
+.feature-positive {
+    background: linear-gradient(90deg, #1fab89, #62d2a2);
+}
+
+.feature-acoustic {
+    background: linear-gradient(90deg, #fec867, #fb9d23);
+}
+
+/* --- ADD THESE STYLES FOR THE SLIDE-UP PANEL --- */
+
+.song-panel {
+    position: fixed;
+    /* This hides it 100% *below* the viewport by default */
+    transform: translateY(100%);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background: #080808;
+    z-index: 100;
+    /* This makes the slide smooth */
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        visibility 0s 0.5s;
+    padding: 0 60px;
+    color: #fff;
+    overflow-y: auto;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* This class is added by your callback to slide the panel *up* */
+.song-panel.is-open {
+    transform: translateY(0%);
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        visibility 0s 0s;
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.song-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    /* This makes it stick to the top */
+    position: sticky;
+    top: 0;
+
+    /* Styling to match panel */
+    background: #080808;
+    z-index: 10;
+    /* Keeps it above the scrolling song grid */
+
+    /* Add padding so it's not at the very edge */
+    /* We match the panel's padding but remove horizontal */
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    /* Space below header */
+}
+
+.close-button {
+    all: unset;
+    cursor: pointer;
+    font-size: 24px;
+    /* A bit bigger and easier to click */
+    font-weight: 600;
+    color: #888;
+    transition: color 0.2s;
+}
+
+.close-button:hover {
+    color: #fff;
+}
