@@ -51,6 +51,7 @@ body {
 
     /* HERE IS THE MAGIC: Animate all property changes */
     transition: all var(--transition-speed) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform, opacity, left, box-shadow;
 }
 
 .img {
@@ -660,6 +661,7 @@ body {
     visibility: visible;
 }
 
+
 .song-panel-header {
     display: flex;
     justify-content: space-between;
@@ -694,4 +696,132 @@ body {
 
 .close-button:hover {
     color: #fff;
+}
+
+.year-dropdown {
+    width: 150px;
+    margin-left: 20px;
+}
+
+.year-dropdown .Select-control {
+    background-color: #181818;
+    border: 1px solid #333;
+}
+
+.year-dropdown .Select-value-label {
+    color: #fff !important;
+}
+
+.year-dropdown .Select-arrow {
+    border-color: #888 transparent transparent;
+}
+
+.year-dropdown .Select-menu-outer {
+    z-index: 100;
+    background-color: #282828;
+    border: 1px solid #333;
+}
+
+.year-dropdown .Select-option {
+    color: #b3b3b3;
+    background-color: #282828;
+}
+
+.year-dropdown .Select-option.is-focused {
+    background-color: #333;
+    color: #fff;
+}
+
+.section-subtitle {
+    font-size: 15px;
+    color: #b3b3b3;
+    /* Muted grey color */
+    font-weight: 400;
+    margin-top: 4px;
+    /* Space below the main title */
+    margin-bottom: 0;
+    margin-left: 60px;
+}
+
+.plots-section {
+    /* This adds a nice visual break after the carousel */
+    border-top: 1px solid #222;
+    margin-top: 40px;
+    padding-top: 20px;
+}
+
+.plot-container {
+    padding: 20px 60px 40px 60px;
+    /* Add some space between plots */
+}
+
+/* Make slider text/buttons white */
+.plot-container .slider-value,
+.plot-container .slider-step-value {
+    color: #fff;
+}
+
+.plot-container .slider-label {
+    color: #b3b3b3;
+}
+
+.artist-dropdown {
+    margin-bottom: 20px;
+}
+
+/* Control box */
+.artist-dropdown .Select-control {
+    background-color: #000;
+    /* Changed to black */
+    border: 1px solid #333;
+    /* Dark grey border */
+}
+
+/* Dropdown arrow */
+.artist-dropdown .Select-arrow {
+    border-color: #888 transparent transparent;
+}
+
+/* Dropdown menu */
+.artist-dropdown .Select-menu-outer {
+    background-color: #000;
+    /* Changed to black */
+    border: 1px solid #333;
+    z-index: 99;
+}
+
+/* Items in the menu */
+.artist-dropdown .Select-option {
+    color: #b3b3b3;
+    background-color: #000;
+    /* Changed to black */
+}
+
+/* Hovered/focused item */
+.artist-dropdown .Select-option.is-focused {
+    background-color: #222;
+    /* Very dark grey for hover */
+    color: #fff;
+}
+
+/* Selected "pills" in the bar */
+.artist-dropdown .Select-value {
+    background-color: #222;
+    /* Dark grey for pills */
+    color: #fff;
+}
+
+.artist-dropdown .Select-value-icon {
+    border-right-color: #444;
+}
+
+.artist-dropdown .Select-value-icon:hover {
+    background-color: #1db954;
+    color: #000;
+}
+
+/* Placeholder text */
+.artist-dropdown .Select-placeholder,
+.artist-dropdown .Select-value-label {
+    color: #b3b3b3 !important;
 }
