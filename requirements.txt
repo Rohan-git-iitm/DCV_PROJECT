@@ -2,3 +2,4 @@ pandas
 dash
 plotly
 dash-svg
+gunicorn
