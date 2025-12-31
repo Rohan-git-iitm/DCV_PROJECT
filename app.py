@@ -63,6 +63,7 @@ artists = load_artists()
 N = len(artists)
 
 app = Dash(__name__, suppress_callback_exceptions=True)
+server = app.server
 app.title = "Spotify Music Dashboard"
 
 try:
@@ -993,4 +994,5 @@ def update_corr_artist_plot(selected_year):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8050)
+    port = int(os.environ.get("PORT", 8050))
+    app.run_server(host='0.0.0.0', port=port, debug=False)
